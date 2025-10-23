@@ -1,1 +1,18 @@
 
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo "Install phase - nothing needed here"
+  pre_build:
+    commands:
+      - echo "Pre-build phase - setup if needed"
+  build:
+    commands:
+      - echo "Build phase - your commands go here"
+      - echo "For example, just listing files:"
+      - ls -la
+artifacts:
+  files:
+    - '**/*'
