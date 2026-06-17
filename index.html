@@ -504,6 +504,8 @@
                             <form id="contactForm" class="space-y-6" action="https://api.web3forms.com/submit"
                                 method="POST">
                                 <input type="hidden" name="access_key" value="1ec3a53c-ad4e-4b1e-8011-807b899dbd75">
+                                <!-- Sets the sender name in your inbox -->
+                                <input type="hidden" name="from_name" value="Portfolio Notifications">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label for="name" class="block mb-2 font-medium">Your Name</label>
@@ -597,6 +599,11 @@
                     e.preventDefault();
 
                     const formData = new FormData(contactForm);
+
+                    // Customize the email subject so it stands out in your inbox!
+                    const userName = document.getElementById('name').value;
+                    const userSubject = document.getElementById('subject').value;
+                    formData.set('subject', `Portfolio 🚀 | ${userName}: ${userSubject}`);
 
                     // Show a sending message
                     formMessage.className = "text-center py-3 px-4 mb-4 rounded-lg font-medium border border-primary bg-primary/10 text-primary block animate-pulse";
