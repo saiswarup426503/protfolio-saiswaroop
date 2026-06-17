@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Set your recipient email address
-    $recipient = "pamminasaiswarup@gmail.com";
+    $recipient = "238r1a12h8@gmail.com";
 
     // Set the email subject
     $email_subject = "New Portfolio Contact: $subject";
