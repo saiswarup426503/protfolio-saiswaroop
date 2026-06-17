@@ -501,7 +501,9 @@
 
                         <div>
                             <h3 class="text-2xl font-bold mb-6">Send Me a Message</h3>
-                            <form id="contactForm" class="space-y-6" action="submit_contact.php" method="POST">
+                            <form id="contactForm" class="space-y-6" action="https://api.web3forms.com/submit"
+                                method="POST">
+                                <input type="hidden" name="access_key" value="1ec3a53c-ad4e-4b1e-8011-807b899dbd75">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div>
                                         <label for="name" class="block mb-2 font-medium">Your Name</label>
@@ -584,6 +586,48 @@
             <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
             <!--Main Js -->
             <script src="script.js"></script>
+
+            <!-- Web3Forms Submission Handler -->
+            <script>
+                const contactForm = document.getElementById('contactForm');
+                const formMessage = document.getElementById('formMessage');
+
+                contactForm.addEventListener('submit', function (e) {
+                    // Prevent the default form submission
+                    e.preventDefault();
+
+                    const formData = new FormData(contactForm);
+
+                    // Show a sending message
+                    formMessage.className = "text-center py-2 px-4 mb-4 rounded-lg text-white font-medium bg-blue-500 block";
+                    formMessage.textContent = 'Sending message...';
+
+                    // Send to Web3Forms
+                    fetch('https://api.web3forms.com/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                        .then(async (response) => {
+                            let json = await response.json();
+                            if (response.status === 200) {
+                                formMessage.className = "text-center py-2 px-4 mb-4 rounded-lg text-white font-medium bg-green-500 block";
+                                formMessage.textContent = "Thank you! Your message has been sent.";
+                                contactForm.reset();
+                            } else {
+                                // This will output exactly why Web3Forms rejected the request (e.g., Invalid Access Key)
+                                formMessage.className = "text-center py-2 px-4 mb-4 rounded-lg text-white font-medium bg-red-500 block";
+                                formMessage.textContent = json.message || "An error occurred while sending your message.";
+                            }
+                        })
+                        .catch(error => {
+                            formMessage.className = "text-center py-2 px-4 mb-4 rounded-lg text-white font-medium bg-red-500 block";
+                            formMessage.textContent = "Something went wrong! Please check your connection and try again.";
+                        });
+                });
+            </script>
 </body>
 
 </html>

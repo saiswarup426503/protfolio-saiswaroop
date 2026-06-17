@@ -1,36 +1,39 @@
 <?php
-header("Content-Type: application/json");
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get the form fields and remove whitespace
+    $name = strip_tags(trim($_POST["name"]));
+    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
+    $subject = strip_tags(trim($_POST["subject"]));
+    $message = trim($_POST["message"]);
 
-// Database credentials
-$host = "localhost";
-$db   = "portfolio_db";
-$user = "root";        // change if different
-$pass = "Sai@426503";
-$charset = "utf8mb4";
-
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-
-try {
-    $pdo = new PDO($dsn, $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
-
-    // Insert form data
-    if ($_SERVER["REQUEST_METHOD"] === "POST") {
-        $stmt = $pdo->prepare("INSERT INTO contact_submissions (name, email, subject, message, submission_date) 
-                            VALUES (:name, :email, :subject, :message, NOW())");
-        $stmt->execute([
-            ':name' => $_POST['name'],
-            ':email' => $_POST['email'],
-            ':subject' => $_POST['subject'],
-            ':message' => $_POST['message']
-        ]);
-
-        echo json_encode(["success" => true]);
-    } else {
-        echo json_encode(["success" => false, "message" => "Invalid request"]);
+    // Check that data was sent correctly
+    if (empty($name) || empty($subject) || empty($message) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        http_response_code(400);
+        echo "Please complete the form correctly.";
+        exit;
     }
-} catch (PDOException $e) {
-    echo json_encode(["success" => false, "message" => "DB Connection failed: " . $e->getMessage()]);
+
+    // Set your recipient email address
+    $recipient = "pamminasaiswarup@gmail.com";
+
+    // Set the email subject
+    $email_subject = "New Portfolio Contact: $subject";
+
+    // Build the email content
+    $email_content = "Name: $name\n";
+    $email_content .= "Email: $email\n\n";
+    $email_content .= "Message:\n$message\n";
+
+    // Build the email headers
+    $email_headers = "From: $name <$email>";
+
+    // Send the email
+    if (mail($recipient, $email_subject, $email_content, $email_headers)) {
+        http_response_code(200);
+        echo "Thank You! Your message has been sent.";
+    } else {
+        http_response_code(500);
+        echo "Oops! Something went wrong and we couldn't send your message.";
+    }
 }
+?>
