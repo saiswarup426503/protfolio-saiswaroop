@@ -599,7 +599,7 @@
                     const formData = new FormData(contactForm);
 
                     // Show a sending message
-                    formMessage.className = "text-center py-2 px-4 mb-4 rounded-lg text-white font-medium bg-blue-500 block";
+                    formMessage.className = "text-center py-3 px-4 mb-4 rounded-lg font-medium border border-primary bg-primary/10 text-primary block animate-pulse";
                     formMessage.textContent = 'Sending message...';
 
                     // Send to Web3Forms
@@ -613,17 +613,17 @@
                         .then(async (response) => {
                             let json = await response.json();
                             if (response.status === 200) {
-                                formMessage.className = "text-center py-2 px-4 mb-4 rounded-lg text-white font-medium bg-green-500 block";
+                                formMessage.className = "text-center py-3 px-4 mb-4 rounded-lg font-medium border border-green-500 bg-green-500/10 text-green-400 block";
                                 formMessage.textContent = "Thank you! Your message has been sent.";
                                 contactForm.reset();
                             } else {
                                 // This will output exactly why Web3Forms rejected the request (e.g., Invalid Access Key)
-                                formMessage.className = "text-center py-2 px-4 mb-4 rounded-lg text-white font-medium bg-red-500 block";
+                                formMessage.className = "text-center py-3 px-4 mb-4 rounded-lg font-medium border border-red-500 bg-red-500/10 text-red-400 block";
                                 formMessage.textContent = json.message || "An error occurred while sending your message.";
                             }
                         })
                         .catch(error => {
-                            formMessage.className = "text-center py-2 px-4 mb-4 rounded-lg text-white font-medium bg-red-500 block";
+                            formMessage.className = "text-center py-3 px-4 mb-4 rounded-lg font-medium border border-red-500 bg-red-500/10 text-red-400 block";
                             formMessage.textContent = "Something went wrong! Please check your connection and try again.";
                         });
                 });
